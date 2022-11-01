@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue';
+import table from '.table.json'
 
 </script>
 
