@@ -47,6 +47,8 @@ function isHeader(row: any): boolean {
   return row.rowType === 'Header';
 }
 
+// Checks whether the row has the headerCellDetails property or not.
+// Then, repeats the same process for rowspan property.
 function rowspan(row: any, colIndex: number): number {
   if(row.hasOwnProperty('headerCellDetails') 
   && row.headerCellDetails[colIndex].hasOwnProperty('rowspan')){
@@ -57,6 +59,8 @@ function rowspan(row: any, colIndex: number): number {
   }
 }
 
+// Checks whether the row has the headerCellDetails property or not.
+// Then, repeats the same process for colspan property.
 function colspan(row: any, colIndex: number): number {
   if(row.hasOwnProperty('headerCellDetails') 
   && row.headerCellDetails[colIndex].hasOwnProperty('colspan')){
@@ -76,6 +80,8 @@ function alignment(row: any, colIndex: number, type: string): string {
   }
 }
 
+// If the row has cellDetails property and its colIndex is 0,
+// returns the groupLevel property from the cellDetails property of the row.
 function groupLevel(row: any, colIndex: number): number {
   if(row.hasOwnProperty('cellDetails') && colIndex == 0){
     return row.cellDetails[0].groupLevel;
