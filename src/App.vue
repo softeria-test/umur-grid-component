@@ -2,59 +2,25 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
-    <table class="centered">
-      <tr>
-        <th rowspan="3"></th>
-        <th colspan="6">2017</th>
-      </tr>
-      <tr>
-        <th colspan="2">Exposure</th>
-        <th colspan="2">Total Risk</th>
-        <th colspan="2">Contribution to Risk</th>
-      </tr>
-      <tr>
-        <th>Fund</th>
-        <th>Bench</th>
-        <th>Fund</th>
-        <th>Bench</th>
-        <th>Fund</th>
-        <th>Bench</th>
-      </tr>
-      <tr>
-        <td>Max</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-      </tr>
-      <tr>
-        <td>Total</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-      </tr>
-      <tr>
-        <td>Developed Markets</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-      </tr>
-      <tr>
-        <td>Middle East and Africa</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
-        <td>88.3</td>
+
+    <table v-if="table" class="stach-table centered" v-bind:style="style">
+      <tr v-for="(row, rowIndex) in table.data.rows"
+      :key="row"
+        v-bind:class="{ header : isHeader(row) }">
+        <td v-for="(value, colIndex) in row.cells"
+        :key="row"
+          v-if="!isHidden(row, colIndex)"
+          v-bind:rowspan="rowspan(row, colIndex)"
+          v-bind:colspan="colspan(row, colIndex)"
+          v-bind:style="{
+              textAlign: alignment(row, colIndex, 'horizontal'),
+              verticalAlign: alignment(row, colIndex, 'vertical')
+          }">
+              <div v-bind:style="{'padding-left': groupLevel(row, colIndex) + 'em'}">
+                <b v-if="isHeader(row)">{{value}}</b>
+                <div v-if="!isHeader(row)">{{value}}</div>
+              </div>
+        </td>
       </tr>
     </table>
   </div>
@@ -63,14 +29,61 @@
 
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue';
-import table from './table.json';
+import tableJson from './table.json';
+
+const table = tableJson.tables.main;
+
+console.log(tableJson);
+console.log(isHeader(table.data.rows[0]));
+console.log(groupLevel(table.data.rows[7], 0));
+console.log(groupLevel(table.data.rows[8], 1));
+// console.log(groupLevel(table.data.rows[0], 2));
 
 function isHidden(a: number, b: number): boolean {
   return false;
 }
 
-console.log(table);
-console.log(table.tables.main.definition.columns[4])
+function isHeader(row: any): boolean {
+  return row.rowType === 'Header';
+}
+
+function rowspan(row: any, colIndex: number): number {
+  if(row.hasOwnProperty('headerCellDetails') 
+  && row.headerCellDetails[colIndex].hasOwnProperty('rowspan')){
+    return row.headerCellDetails[colIndex].rowspan;
+  }
+  else {
+    return 1;
+  }
+}
+
+function colspan(row: any, colIndex: number): number {
+  if(row.hasOwnProperty('headerCellDetails') 
+  && row.headerCellDetails[colIndex].hasOwnProperty('colspan')){
+    return row.headerCellDetails[colIndex].colspan;
+  }
+  else {
+    return 1;
+  }
+}
+
+function alignment(row: any, colIndex: number, type: string): string {
+  if(type === "vertical"){
+    return "baseline";
+  }
+  else{
+    return "left";
+  }
+}
+
+function groupLevel(row: any, colIndex: number): number {
+  if(row.hasOwnProperty('cellDetails') && colIndex == 0){
+    return row.cellDetails[0].groupLevel;
+  }
+  else {
+    return 0;
+  }
+}
 
 </script>
 
