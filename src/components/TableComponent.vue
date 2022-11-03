@@ -1,5 +1,6 @@
 <template>
     <table v-if="table" class="stach-table centered">
+      <caption><strong>My Tabular Data</strong></caption>
       <tr v-for="(row, rowIndex) in table.data.rows"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
@@ -8,13 +9,10 @@
           v-bind:rowspan="rowspan(row, colIndex)"
           v-bind:colspan="colspan(row, colIndex)"
           v-bind:style="{
-              textAlign: 'left',
+              textAlign: alignment(row, colIndex, 'horizontal'),
               verticalAlign: alignment(row, colIndex, 'vertical')
           }">
-              <div v-bind:style="{'padding-left': groupLevel(row, colIndex) + 'em'}">
-                <b v-if="isHeader(row)">{{value}}</b>
-                <div v-if="!isHeader(row)">{{value}}</div>
-              </div>
+              <div v-bind:style="{'padding-left': groupLevel(row, colIndex) + 'em'}">{{value}}</div>
         </td>
       </tr>
     </table>
@@ -25,8 +23,6 @@
 import tableJson from '../table.json';
 
 const table = tableJson.tables.main;
-
-// console.log(table.definition.columns[1].format?.halign);
 
 function isHidden(a: number, b: number): boolean {
   return false;
@@ -65,6 +61,9 @@ function alignment(row: any, colIndex: number, type: string): string {
     return "baseline";
   }
   else{
+    if(isHeader(row)){
+      return "center";
+    }
     return "left";
   }
 }
