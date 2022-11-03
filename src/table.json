@@ -333,6 +333,7 @@
               null,
               0.24
             ],
+            "isHidden": true,
             "cellDetails": {
               "0": {
                 "groupLevel": 1
