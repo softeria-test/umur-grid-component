@@ -22,21 +22,40 @@
 
 import tableJson from '../table.json'
 
+type CellDetails = {
+  groupLevel: number
+}
+
+type HeaderCellDetails = {
+  rowspan: number,
+  colspan: number,
+  columnIndex: number,
+  source: string
+}
+
+type Row = {
+  cells: string[],
+  headerCellDetails?: HeaderCellDetails[],
+  cellDetails?: CellDetails[],
+  rowType?: string,
+}
+
 const table = tableJson.tables.main
 
-function isHidden (a: number, b: number): boolean {
+function isHidden (): boolean {
   return false
 }
 
-function isHeader (row: any): boolean {
+function isHeader (row: Row): boolean {
   return row.rowType === 'Header'
 }
 
 // Checks whether the row has the headerCellDetails property or not.
 // Then, repeats the same process for rowspan property.
-function rowspan (row: any, colIndex: number): number {
-  if (row.hasOwnProperty('headerCellDetails') &&
-  row.headerCellDetails[colIndex].hasOwnProperty('rowspan')) {
+function rowspan (row: Row, colIndex: number): number {
+  if (Object.hasOwn(row, 'headerCellDetails') &&
+  row.headerCellDetails !== undefined &&
+  Object.hasOwn(row.headerCellDetails[colIndex], 'rowspan')) {
     return row.headerCellDetails[colIndex].rowspan
   } else {
     return 1
@@ -45,16 +64,17 @@ function rowspan (row: any, colIndex: number): number {
 
 // Checks whether the row has the headerCellDetails property or not.
 // Then, repeats the same process for colspan property.
-function colspan (row: any, colIndex: number): number {
-  if (row.hasOwnProperty('headerCellDetails') &&
-  row.headerCellDetails[colIndex].hasOwnProperty('colspan')) {
+function colspan (row: Row, colIndex: number): number {
+  if (Object.hasOwn(row, 'headerCellDetails') &&
+  row.headerCellDetails !== undefined &&
+  Object.hasOwn(row.headerCellDetails[colIndex], 'colspan')) {
     return row.headerCellDetails[colIndex].colspan
   } else {
     return 1
   }
 }
 
-function alignment (row: any, colIndex: number, type: string): string {
+function alignment (row: Row, colIndex: number, type: string): string {
   if (type === 'vertical') {
     return 'baseline'
   } else {
@@ -65,14 +85,16 @@ function alignment (row: any, colIndex: number, type: string): string {
   }
 }
 
-function filteredCells (cells: any): any {
-  return cells.filter((cell: any) => !isHidden(cell, 0))
+function filteredCells (cells: string[]): string[] {
+  return cells.filter(() => !isHidden())
 }
 
 // If the row has cellDetails property and its colIndex is 0,
 // returns the groupLevel property from the cellDetails property of the row.
-function groupLevel (row: any, colIndex: number): number {
-  if (row.hasOwnProperty('cellDetails') && colIndex == 0) {
+function groupLevel (row: Row, colIndex: number): number {
+  if (Object.hasOwn(row, 'cellDetails') &&
+  colIndex === 0 &&
+  row.cellDetails !== undefined) {
     return row.cellDetails[0].groupLevel
   } else {
     return 0
