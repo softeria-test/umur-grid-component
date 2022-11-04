@@ -32,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps} from 'vue';
+import { defineProps } from 'vue'
 
 const props = defineProps({
-    msg:String
+  msg: String
 })
 </script>
 
