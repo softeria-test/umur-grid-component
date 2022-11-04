@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" width="150" height="150">
-    
+
     <TableComponent></TableComponent>
   </div>
 
@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 
-import TableComponent from './components/TableComponent.vue';
+import TableComponent from './components/TableComponent.vue'
 
 </script>
 
