@@ -4,4 +4,6 @@ jobs:
   lint-check:
     runs-on: ubuntu-latest
     steps:
-      - run: yarn lint
+      - run: |
+          yarn init
+          yarn lint
