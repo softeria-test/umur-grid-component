@@ -1,0 +1,7 @@
+name: Push Lint Check
+on: push
+jobs:
+  lint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: yarn lint
