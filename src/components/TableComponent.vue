@@ -34,8 +34,8 @@ type HeaderCellDetails = {
 }
 
 type Row = {
-  cells: string[],
-  headerCellDetails?: HeaderCellDetails[],
+  cells: (string | number | null)[],
+  headerCellDetails?: HeaderCellDetails[] | string,
   cellDetails?: CellDetails[],
   rowType?: string,
 }
@@ -56,7 +56,9 @@ function rowspan (row: Row, colIndex: number): number {
   if (Object.hasOwn(row, 'headerCellDetails') &&
   row.headerCellDetails !== undefined &&
   Object.hasOwn(row.headerCellDetails[colIndex], 'rowspan')) {
-    return row.headerCellDetails[colIndex].rowspan
+    if(typeof row.headerCellDetails[colIndex] !== 'string') {
+      return row.headerCellDetails[colIndex].rowspan
+    }
   } else {
     return 1
   }
@@ -85,7 +87,7 @@ function alignment (row: Row, colIndex: number, type: string): string {
   }
 }
 
-function filteredCells (cells: string[]): string[] {
+function filteredCells (cells: Row['cells']): Row['cells'] {
   return cells.filter(() => !isHidden())
 }
 
