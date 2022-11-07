@@ -5,5 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          yarn init
           yarn lint
