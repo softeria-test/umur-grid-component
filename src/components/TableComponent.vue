@@ -3,16 +3,16 @@
       <caption><strong>My Tabular Data</strong></caption>
       <tr v-for="(row, rowIndex) in table.data.rows"
       :key="rowIndex"
-        v-bind:class="{ header : isHeader(row) }">
+        v-bind:class="{ header : isHeader(row as Row) }">
         <td v-for="(value, colIndex) in filteredCells(row.cells)"
         :key="colIndex"
-          v-bind:rowspan="rowspan(row, colIndex)"
-          v-bind:colspan="colspan(row, colIndex)"
+          v-bind:rowspan="rowspan(row as Row, colIndex)"
+          v-bind:colspan="colspan(row as Row, colIndex)"
           v-bind:style="{
-              textAlign: alignment(row, colIndex, 'horizontal'),
-              verticalAlign: alignment(row, colIndex, 'vertical')
+              textAlign: alignment(row as Row, colIndex, 'horizontal'),
+              verticalAlign: alignment(row as Row, colIndex, 'vertical')
           }">
-              <div v-bind:style="{'padding-left': groupLevel(row, colIndex) + 'em'}">{{value}}</div>
+              <div v-bind:style="{'padding-left': groupLevel(row as Row, colIndex) + 'em'}">{{value}}</div>
         </td>
       </tr>
     </table>
@@ -35,7 +35,7 @@ type HeaderCellDetails = {
 
 type Row = {
   cells: (string | number | null)[],
-  headerCellDetails?: HeaderCellDetails[] | string,
+  headerCellDetails?: (HeaderCellDetails | string)[],
   cellDetails?: CellDetails[],
   rowType?: string,
 }
@@ -55,10 +55,8 @@ function isHeader (row: Row): boolean {
 function rowspan (row: Row, colIndex: number): number {
   if (Object.hasOwn(row, 'headerCellDetails') &&
   row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex], 'rowspan')) {
-    if(typeof row.headerCellDetails[colIndex] !== 'string') {
-      return row.headerCellDetails[colIndex].rowspan
-    }
+  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'rowspan')) {
+    return (row.headerCellDetails[colIndex] as HeaderCellDetails).rowspan
   } else {
     return 1
   }
@@ -69,8 +67,8 @@ function rowspan (row: Row, colIndex: number): number {
 function colspan (row: Row, colIndex: number): number {
   if (Object.hasOwn(row, 'headerCellDetails') &&
   row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex], 'colspan')) {
-    return row.headerCellDetails[colIndex].colspan
+  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'colspan')) {
+    return (row.headerCellDetails[colIndex] as HeaderCellDetails).colspan
   } else {
     return 1
   }
