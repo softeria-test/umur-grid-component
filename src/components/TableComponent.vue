@@ -3,16 +3,16 @@
       <caption><strong>My Tabular Data</strong></caption>
       <tr v-for="(row, rowIndex) in table.data.rows"
       :key="rowIndex"
-        v-bind:class="{ header : isHeader(row as Row) }">
+        v-bind:class="{ header : isHeader(row) }">
         <td v-for="(value, colIndex) in filteredCells(row.cells)"
         :key="colIndex"
-          v-bind:rowspan="rowspan(row as Row, colIndex)"
-          v-bind:colspan="colspan(row as Row, colIndex)"
+          v-bind:rowspan="rowspan(row, colIndex)"
+          v-bind:colspan="colspan(row, colIndex)"
           v-bind:style="{
-              textAlign: alignment(row as Row, colIndex, 'horizontal'),
-              verticalAlign: alignment(row as Row, colIndex, 'vertical')
+              textAlign: alignment(row, colIndex, 'horizontal'),
+              verticalAlign: alignment(row, colIndex, 'vertical')
           }">
-              <div v-bind:style="{'padding-left': groupLevel(row as Row, colIndex) + 'em'}">{{value}}</div>
+              <div v-bind:style="{'padding-left': groupLevel(row, colIndex) + 'em'}">{{value}}</div>
         </td>
       </tr>
     </table>
