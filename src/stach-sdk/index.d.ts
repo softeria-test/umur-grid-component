@@ -1,2 +1,2 @@
-import { factset, google } from './stach';
-export { factset, google };
+import { factset, google } from './stach'
+export { factset, google }
