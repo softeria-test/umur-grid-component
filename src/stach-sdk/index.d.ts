@@ -1,2 +1,3 @@
-import { factset, google } from './stach'
-export { factset, google }
+/* eslint-disable */
+import { factset, google } from './stach';
+export { factset, google };
