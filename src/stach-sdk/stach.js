@@ -1,13 +1,14 @@
+/* eslint-disable */
 /*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
 "use strict";
 
-var $protobuf = require("protobufjs/minimal");
+import { Reader, Writer, util, roots } from "protobufjs/minimal";
 
 // Common aliases
-var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
+var $Reader = Reader, $Writer = Writer, $util = util;
 
 // Exported root namespace
-var $root = $protobuf.roots.stach || ($protobuf.roots.stach = {});
+var $root = roots.stach || (roots.stach = {});
 
 $root.factset = (function() {
 
@@ -330,7 +331,7 @@ $root.factset = (function() {
                      * @returns {Object.<string,*>} JSON object
                      */
                     Package.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        return this.constructor.toObject(this, util.toJSONOptions);
                     };
 
                     return Package;
@@ -582,7 +583,7 @@ $root.factset = (function() {
                      * @returns {Object.<string,*>} JSON object
                      */
                     RowOrganizedPackage.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        return this.constructor.toObject(this, util.toJSONOptions);
                     };
 
                     RowOrganizedPackage.Table = (function() {
@@ -826,7 +827,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         Table.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return Table;
@@ -1034,7 +1035,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         TableDefinition.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return TableDefinition;
@@ -1371,7 +1372,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         TableData.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return TableData;
@@ -1863,7 +1864,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         Row.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         /**
@@ -2157,7 +2158,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         CellDetail.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return CellDetail;
@@ -2526,7 +2527,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         HeaderCellDetail.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         /**
@@ -2773,7 +2774,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         MapOfMetadata.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return MapOfMetadata;
@@ -3000,7 +3001,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         CellDefinition.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return CellDefinition;
@@ -3295,7 +3296,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         ColumnData.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return ColumnData;
@@ -3686,7 +3687,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         ColumnDefinition.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return ColumnDefinition;
@@ -3986,7 +3987,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         DataFormat.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return DataFormat;
@@ -4207,7 +4208,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         ListOfMetadata.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return ListOfMetadata;
@@ -4464,7 +4465,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         MetadataCollection.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return MetadataCollection;
@@ -4707,7 +4708,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         MetadataItem.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return MetadataItem;
@@ -5067,7 +5068,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         MetadataLocations.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         MetadataLocations.CellsColumnMap = (function() {
@@ -5293,7 +5294,7 @@ $root.factset = (function() {
                              * @returns {Object.<string,*>} JSON object
                              */
                             CellsColumnMap.prototype.toJSON = function toJSON() {
-                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                return this.constructor.toObject(this, util.toJSONOptions);
                             };
 
                             return CellsColumnMap;
@@ -5522,7 +5523,7 @@ $root.factset = (function() {
                              * @returns {Object.<string,*>} JSON object
                              */
                             CellsRowMap.prototype.toJSON = function toJSON() {
-                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                return this.constructor.toObject(this, util.toJSONOptions);
                             };
 
                             return CellsRowMap;
@@ -5807,7 +5808,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         Reference.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return Reference;
@@ -6042,7 +6043,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         RowDefinition.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return RowDefinition;
@@ -6262,7 +6263,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         Table.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return Table;
@@ -6563,7 +6564,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         TableData.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return TableData;
@@ -6794,7 +6795,7 @@ $root.factset = (function() {
                          * @returns {Object.<string,*>} JSON object
                          */
                         TableDefinition.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            return this.constructor.toObject(this, util.toJSONOptions);
                         };
 
                         return TableDefinition;
@@ -7072,7 +7073,7 @@ $root.google = (function() {
              * @returns {Object.<string,*>} JSON object
              */
             Struct.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                return this.constructor.toObject(this, util.toJSONOptions);
             };
 
             return Struct;
@@ -7433,7 +7434,7 @@ $root.google = (function() {
              * @returns {Object.<string,*>} JSON object
              */
             Value.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                return this.constructor.toObject(this, util.toJSONOptions);
             };
 
             return Value;
@@ -7651,7 +7652,7 @@ $root.google = (function() {
              * @returns {Object.<string,*>} JSON object
              */
             ListValue.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                return this.constructor.toObject(this, util.toJSONOptions);
             };
 
             return ListValue;
@@ -7663,4 +7664,4 @@ $root.google = (function() {
     return google;
 })();
 
-module.exports = $root;
+export default $root;
