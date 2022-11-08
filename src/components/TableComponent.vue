@@ -21,24 +21,9 @@
 <script setup lang="ts">
 
 import tableJson from '../table.json'
+import stach from '../stach-sdk/stach'
 
-type CellDetails = {
-  groupLevel: number
-}
-
-type HeaderCellDetails = {
-  rowspan: number,
-  colspan: number,
-  columnIndex: number,
-  source: string
-}
-
-type Row = {
-  cells: (string | number | null)[],
-  headerCellDetails?: (HeaderCellDetails | string)[],
-  cellDetails?: CellDetails[],
-  rowType?: string,
-}
+type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 
 const table = tableJson.tables.main
 
@@ -50,55 +35,24 @@ function isHeader (row: Row): boolean {
   return row.rowType === 'Header'
 }
 
-// Checks whether the row has the headerCellDetails property or not.
-// Then, repeats the same process for rowspan property.
 function rowspan (row: Row, colIndex: number): number {
-  if (Object.hasOwn(row, 'headerCellDetails') &&
-  row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'rowspan')) {
-    return (row.headerCellDetails[colIndex] as HeaderCellDetails).rowspan
-  } else {
-    return 1
-  }
+  return row.headerCellDetails?.[colIndex].rowspan ?? 1
 }
 
-// Checks whether the row has the headerCellDetails property or not.
-// Then, repeats the same process for colspan property.
 function colspan (row: Row, colIndex: number): number {
-  if (Object.hasOwn(row, 'headerCellDetails') &&
-  row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'colspan')) {
-    return (row.headerCellDetails[colIndex] as HeaderCellDetails).colspan
-  } else {
-    return 1
-  }
+  return row.headerCellDetails?.[colIndex].colspan ?? 1
 }
 
 function alignment (row: Row, colIndex: number, type: string): string {
-  if (type === 'vertical') {
-    return 'baseline'
-  } else {
-    if (isHeader(row)) {
-      return 'center'
-    }
-    return 'left'
-  }
+  return type === 'vertical' ? 'baseline' : isHeader(row) ? 'center' : 'left'
 }
 
-function filteredCells (cells: Row['cells']): Row['cells'] {
+function filteredCells (cells: string[]): string[] {
   return cells.filter(() => !isHidden())
 }
 
-// If the row has cellDetails property and its colIndex is 0,
-// returns the groupLevel property from the cellDetails property of the row.
 function groupLevel (row: Row, colIndex: number): number {
-  if (Object.hasOwn(row, 'cellDetails') &&
-  colIndex === 0 &&
-  row.cellDetails !== undefined) {
-    return row.cellDetails[0].groupLevel
-  } else {
-    return 0
-  }
+  return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
 }
 
 </script>

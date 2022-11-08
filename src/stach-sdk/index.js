@@ -1,8 +1,8 @@
 /* eslint-disable */
 var lib = require('./stach');
 
-// The following overrides the toObject/fromObject for Google well 
-// known types because protobufjs does not correctly implement them  
+// The following overrides the toObject/fromObject for Google well
+// known types because protobufjs does not correctly implement them
 // according to protobuf's specification.
 //
 // Google Well Known Types:
