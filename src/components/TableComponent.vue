@@ -34,8 +34,8 @@ type HeaderCellDetails = {
 }
 
 type Row = {
-  cells: string[],
-  headerCellDetails?: HeaderCellDetails[],
+  cells: (string | number | null)[],
+  headerCellDetails?: (HeaderCellDetails | string)[],
   cellDetails?: CellDetails[],
   rowType?: string,
 }
@@ -55,8 +55,8 @@ function isHeader (row: Row): boolean {
 function rowspan (row: Row, colIndex: number): number {
   if (Object.hasOwn(row, 'headerCellDetails') &&
   row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex], 'rowspan')) {
-    return row.headerCellDetails[colIndex].rowspan
+  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'rowspan')) {
+    return (row.headerCellDetails[colIndex] as HeaderCellDetails).rowspan
   } else {
     return 1
   }
@@ -67,8 +67,8 @@ function rowspan (row: Row, colIndex: number): number {
 function colspan (row: Row, colIndex: number): number {
   if (Object.hasOwn(row, 'headerCellDetails') &&
   row.headerCellDetails !== undefined &&
-  Object.hasOwn(row.headerCellDetails[colIndex], 'colspan')) {
-    return row.headerCellDetails[colIndex].colspan
+  Object.hasOwn(row.headerCellDetails[colIndex] as object, 'colspan')) {
+    return (row.headerCellDetails[colIndex] as HeaderCellDetails).colspan
   } else {
     return 1
   }
@@ -85,7 +85,7 @@ function alignment (row: Row, colIndex: number, type: string): string {
   }
 }
 
-function filteredCells (cells: string[]): string[] {
+function filteredCells (cells: Row['cells']): Row['cells'] {
   return cells.filter(() => !isHidden())
 }
 
