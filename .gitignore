@@ -4,6 +4,7 @@ node_modules
 .scannerwork/
 .yarn/*
 !.yarn/releases
+id_ed25519
 
 # local env files
 .env.local
