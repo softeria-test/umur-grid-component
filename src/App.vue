@@ -2,7 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" width="150" height="150">
 
-    <TableComponent></TableComponent>
+    <TableComponent :table="table"/>
   </div>
 
 </template>
@@ -10,6 +10,13 @@
 <script setup lang="ts">
 
 import TableComponent from './components/TableComponent.vue' // NOSONAR
+import stach from '@/stach-sdk'
+import stachRowOrganizedPackage from '../db.json'
+
+type Table = stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITable
+const table: Table = stachRowOrganizedPackage.data.tables.main as unknown as Table
+
+console.log(table)
 
 </script>
 

@@ -18,50 +18,54 @@
     </table>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { ref } from 'vue'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
-const table = ref<stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITableData | null | undefined>()
+type Table = stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITable
+// const table = ref<stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITableData | null | undefined>()
 type cells = stach.google.protobuf.IListValue | null | undefined
 
-fetch('http://localhost:3000/data')
-  .then((response) => response.json())
-  .then((data) => {
-    const pkg = stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(data)
-    table.value = pkg.tables.main.data
-  })
+// fetch('http://localhost:3000/data')
+//   .then((response) => response.json())
+//   .then((data) => {
+//     const pkg = stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(data)
+//     table.value = pkg.tables.main.data
+//   })
 
-console.log()
+@Component
+export default class TableComponent extends Vue {
+  @Prop() private table!: Table;
 
-function isHeader (row: Row): boolean {
-  return row.rowType === 'Header' as unknown
-}
+  isHeader (row: Row): boolean {
+    return row.rowType === 'Header' as unknown
+  }
 
-function rowspan (row: Row, colIndex: string): number {
-  return row.headerCellDetails?.[colIndex].rowspan ?? 1
-}
+  rowspan (row: Row, colIndex: string): number {
+    return row.headerCellDetails?.[colIndex].rowspan ?? 1
+  }
 
-function colspan (row: Row, colIndex: string): number {
-  return row.headerCellDetails?.[colIndex].colspan ?? 1
-}
+  colspan (row: Row, colIndex: string): number {
+    return row.headerCellDetails?.[colIndex].colspan ?? 1
+  }
 
-function alignment (row: Row, colIndex: string, type: string): string {
-  if (type === 'vertical') {
-    return 'baseline'
-  } else {
-    return isHeader(row) ? 'center' as const : 'left' as const
+  alignment (row: Row, colIndex: string, type: string): string {
+    if (type === 'vertical') {
+      return 'baseline'
+    } else {
+      return this.isHeader(row) ? 'center' as const : 'left' as const
+    }
+  }
+
+  filteredCells (cells: cells): cells {
+    return cells
+  }
+
+  groupLevel (row: Row, colIndex: number): number {
+    return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
   }
 }
-
-function filteredCells (cells: cells): cells {
-  return cells
-}
-
-function groupLevel (row: Row, colIndex: number): number {
-  return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
-}
-
 </script>
