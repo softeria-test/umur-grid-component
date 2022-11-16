@@ -25,7 +25,6 @@ import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
-// const table = ref<stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITableData | null | undefined>()
 type cells = stach.google.protobuf.IListValue | null | undefined
 
 @Component

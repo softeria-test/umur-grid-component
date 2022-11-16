@@ -2,4 +2,4 @@ services:
   sonar_scanner:
     environment:
       - SONAR_SCANNER_OPTS=-Dsonar.projectKey=umur-test-c
-      - SONAR_LOGIN=sqp_3e17fa9a702526b637303a9ca6d09ab8bbd542ed
+      - SONAR_LOGIN=sqp_1d37a58c895001683d7dcb04e06259ae79948a62
