@@ -1,7 +1,7 @@
 <template>
     <table v-if="table" class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
-      <tr v-for="(row, rowIndex) in table.rows"
+      <tr v-for="(row, rowIndex) in table"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
         <td v-for="(value, colIndex) in filteredCells(row.cells)"
@@ -21,24 +21,16 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { ref } from 'vue'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
-type Table = stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITable
+type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
 // const table = ref<stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITableData | null | undefined>()
 type cells = stach.google.protobuf.IListValue | null | undefined
 
-// fetch('http://localhost:3000/data')
-//   .then((response) => response.json())
-//   .then((data) => {
-//     const pkg = stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(data)
-//     table.value = pkg.tables.main.data
-//   })
-
 @Component
 export default class TableComponent extends Vue {
-  @Prop() private table!: Table;
+  @Prop() private table!: IRow;
 
   isHeader (row: Row): boolean {
     return row.rowType === 'Header' as unknown
@@ -69,3 +61,19 @@ export default class TableComponent extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+#table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}
+.centered {
+ margin-left: auto;
+ margin-right: auto;
+ margin-top: 20px;
+}
+.header {
+  font-weight: bold;
+}
+</style>

@@ -9,14 +9,19 @@
 
 <script setup lang="ts">
 
+import { ref } from 'vue'
 import TableComponent from './components/TableComponent.vue' // NOSONAR
 import stach from '@/stach-sdk'
-import stachRowOrganizedPackage from '../db.json'
+type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined;
 
-type Table = stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITable
-const table: Table = stachRowOrganizedPackage.data.tables.main as unknown as Table
+const table = ref<IRow>()
 
-console.log(table)
+fetch('http://localhost:3000/data')
+  .then((response) => response.json())
+  .then((data) => {
+    const pkg = stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(data)
+    table.value = pkg.tables.main.data?.rows
+  })
 
 </script>
 
@@ -28,18 +33,5 @@ console.log(table)
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-#table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-  text-align: center;
-}
-.centered {
- margin-left: auto;
- margin-right: auto;
- margin-top: 20px;
-}
-.header {
-  font-weight: bold;
 }
 </style>
