@@ -5,10 +5,7 @@ import { ref } from 'vue'
 import stach from '@/stach-sdk/stach'
 
 describe('TableComponent.vue', () => {
-  type IRow =
-    | stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[]
-    | null
-    | undefined;
+  type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined;
   const table = ref<IRow>()
   let wrapper: Wrapper<Vue>
 
