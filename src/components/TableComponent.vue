@@ -1,7 +1,7 @@
 <template>
     <table v-if="table" class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
-      <tr v-for="(row, rowIndex) in table.rows"
+      <tr v-for="(row, rowIndex) in table"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
         <td v-for="(value, colIndex) in filteredCells(row.cells)"
@@ -18,50 +18,61 @@
     </table>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 
-import { ref } from 'vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
-const table = ref<stach.factset.protobuf.stach.v2.RowOrganizedPackage.ITableData | null | undefined>()
+type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
 type cells = stach.google.protobuf.IListValue | null | undefined
 
-fetch('http://localhost:3000/data')
-  .then((response) => response.json())
-  .then((data) => {
-    const pkg = stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(data)
-    table.value = pkg.tables.main.data
-  })
+@Component
+export default class TableComponent extends Vue {
+  @Prop() private table!: IRow;
 
-console.log()
+  isHeader (row: Row): boolean {
+    return row.rowType === 'Header' as unknown
+  }
 
-function isHeader (row: Row): boolean {
-  return row.rowType === 'Header' as unknown
-}
+  rowspan (row: Row, colIndex: string): number {
+    return row.headerCellDetails?.[colIndex].rowspan ?? 1
+  }
 
-function rowspan (row: Row, colIndex: string): number {
-  return row.headerCellDetails?.[colIndex].rowspan ?? 1
-}
+  colspan (row: Row, colIndex: string): number {
+    return row.headerCellDetails?.[colIndex].colspan ?? 1
+  }
 
-function colspan (row: Row, colIndex: string): number {
-  return row.headerCellDetails?.[colIndex].colspan ?? 1
-}
+  alignment (row: Row, colIndex: string, type: string): string {
+    if (type === 'vertical') {
+      return 'baseline'
+    } else {
+      return this.isHeader(row) ? 'center' as const : 'left' as const
+    }
+  }
 
-function alignment (row: Row, colIndex: string, type: string): string {
-  if (type === 'vertical') {
-    return 'baseline'
-  } else {
-    return isHeader(row) ? 'center' as const : 'left' as const
+  filteredCells (cells: cells): cells {
+    return cells
+  }
+
+  groupLevel (row: Row, colIndex: number): number {
+    return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
   }
 }
-
-function filteredCells (cells: cells): cells {
-  return cells
-}
-
-function groupLevel (row: Row, colIndex: number): number {
-  return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
-}
-
 </script>
+
+<style lang="scss">
+#table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}
+.centered {
+ margin-left: auto;
+ margin-right: auto;
+ margin-top: 20px;
+}
+.header {
+  font-weight: bold;
+}
+</style>
