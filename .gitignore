@@ -5,6 +5,7 @@ node_modules
 .yarn/*
 !.yarn/releases
 id_ed25519
+coverage
 
 # local env files
 .env.local
