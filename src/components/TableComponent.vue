@@ -1,5 +1,5 @@
 <template>
-    <table v-if="table" class="stach-table centered">
+    <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
       <tr v-for="(row, rowIndex) in table"
       :key="rowIndex"
