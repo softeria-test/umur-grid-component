@@ -6,6 +6,7 @@ node_modules
 !.yarn/releases
 id_ed25519
 coverage
+docker-compose.override.yml
 
 # local env files
 .env.local
