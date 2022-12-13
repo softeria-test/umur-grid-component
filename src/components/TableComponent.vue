@@ -1,10 +1,14 @@
 <template>
+  <div>
+    <form id="search">
+    Search <input name="query" v-model="searchQuery">
+    </form>
     <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
       <tr v-for="(row, rowIndex) in table"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
-        <td v-for="(value, colIndex) in filteredCells(row.cells)"
+        <td v-for="(value, colIndex) in filteredRows(row)?.cells"
         :key="colIndex"
           v-bind:rowspan="rowspan(row, colIndex)"
           v-bind:colspan="colspan(row, colIndex)"
@@ -16,11 +20,13 @@
         </td>
       </tr>
     </table>
+  </div>
 </template>
 
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { ref } from 'vue'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
@@ -30,6 +36,7 @@ type cells = stach.google.protobuf.IListValue | null | undefined
 @Component
 export default class TableComponent extends Vue {
   @Prop() private table!: IRow;
+  searchQuery = ref('')
 
   isHeader (row: Row): boolean {
     return row.rowType === 'Header' as unknown
@@ -51,8 +58,14 @@ export default class TableComponent extends Vue {
     }
   }
 
-  filteredCells (cells: cells): cells {
-    return cells
+  filteredRows (row: any): any {
+    const filterKey = this.searchQuery.toString().toLowerCase()
+    if (row.cells.some((cell: any) =>
+      String(cell).toLowerCase().indexOf(filterKey) > -1)) {
+      return row
+    } else {
+      return null
+    }
   }
 
   groupLevel (row: Row, colIndex: number): number {
@@ -74,5 +87,9 @@ export default class TableComponent extends Vue {
 }
 .header {
   font-weight: bold;
+}
+#search {
+  text-align: center;
+  margin-right: 22.5em;
 }
 </style>
