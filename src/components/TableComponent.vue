@@ -5,10 +5,10 @@
     </form>
     <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
-      <tr v-for="(row, rowIndex) in table"
+      <tr v-for="(row, rowIndex) in filteredTable(table)"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
-        <td v-for="(value, colIndex) in filteredRows(row)?.cells"
+        <td v-for="(value, colIndex) in row.cells"
         :key="colIndex"
           v-bind:rowspan="rowspan(row, colIndex)"
           v-bind:colspan="colspan(row, colIndex)"
@@ -25,53 +25,72 @@
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { ref } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
 type cells = stach.google.protobuf.IListValue | null | undefined
+type RowType = stach.factset.protobuf.stach.v2.RowOrganizedPackage.Row.RowType;
 
-@Component
-export default class TableComponent extends Vue {
-  @Prop() private table!: IRow;
-  searchQuery = ref('')
+export default defineComponent({
+  props: {
+    table: Array as PropType<IRow>
+  },
 
-  isHeader (row: Row): boolean {
-    return row.rowType === 'Header' as unknown
-  }
+  setup (props) {
+    const searchQuery = ref('')
 
-  rowspan (row: Row, colIndex: string): number {
-    return row.headerCellDetails?.[colIndex].rowspan ?? 1
-  }
+    const isHeader = (row: Row): boolean => {
+      return row.rowType === 'Header' as unknown as RowType
+    }
 
-  colspan (row: Row, colIndex: string): number {
-    return row.headerCellDetails?.[colIndex].colspan ?? 1
-  }
+    const rowspan = (row: Row, colIndex: string): number => {
+      return row.headerCellDetails?.[colIndex].rowspan ?? 1
+    }
 
-  alignment (row: Row, colIndex: string, type: string): string {
-    if (type === 'vertical') {
-      return 'baseline'
-    } else {
-      return this.isHeader(row) ? 'center' as const : 'left' as const
+    const colspan = (row: Row, colIndex: string): number => {
+      return row.headerCellDetails?.[colIndex].colspan ?? 1
+    }
+
+    const alignment = (row: Row, colIndex: string, type: string): string => {
+      if (type === 'vertical') {
+        return 'baseline'
+      } else {
+        return isHeader(row) ? 'center' as const : 'left' as const
+      }
+    }
+
+    const filteredTable = (table: any): any => {
+      return props.table?.filter(row => filteredRows(row))
+    }
+
+    const filteredRows = (row: any): boolean => {
+      const filterKey = searchQuery.value.toLowerCase()
+      if (row.cells.some((cell: any) =>
+        String(cell).toLowerCase().indexOf(filterKey) > -1) ||
+      isHeader(row)) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    const groupLevel = (row: Row, colIndex: number): number => {
+      return colIndex === 0 ? row.cells[0] === null ? 11.5 : row.cellDetails?.[0].groupLevel ?? 0 : 0
+    }
+    return {
+      isHeader,
+      colspan,
+      rowspan,
+      groupLevel,
+      alignment,
+      filteredTable,
+      filteredRows,
+      searchQuery
     }
   }
-
-  filteredRows (row: any): any {
-    const filterKey = this.searchQuery.toString().toLowerCase()
-    if (row.cells.some((cell: any) =>
-      String(cell).toLowerCase().indexOf(filterKey) > -1)) {
-      return row
-    } else {
-      return null
-    }
-  }
-
-  groupLevel (row: Row, colIndex: number): number {
-    return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
-  }
-}
+})
 </script>
 
 <style lang="scss">

@@ -14,7 +14,7 @@ describe('TableComponent.vue', () => {
       stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(db.data as unknown as stach.factset.protobuf.stach.v2.RowOrganizedPackage)
     table.value = pkg.tables.main.data?.rows
 
-    wrapper = shallowMount(TableComponent, {
+    wrapper = shallowMount(TableComponent as any, {
       propsData: { table }
     })
   })
