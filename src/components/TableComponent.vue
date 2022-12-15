@@ -5,7 +5,7 @@
     </form>
     <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
-      <tr v-for="(row, rowIndex) in filteredTable(table)"
+      <tr v-for="(row, rowIndex) in filteredTable()"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
         <td v-for="(value, colIndex) in row.cells"
@@ -30,7 +30,7 @@ import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
-type cells = stach.google.protobuf.IListValue | null | undefined
+type cell = stach.google.protobuf.IListValue | null | undefined
 type RowType = stach.factset.protobuf.stach.v2.RowOrganizedPackage.Row.RowType;
 
 export default defineComponent({
@@ -61,13 +61,13 @@ export default defineComponent({
       }
     }
 
-    const filteredTable = (table: any): any => {
+    const filteredTable = (): IRow => {
       return props.table?.filter(row => filteredRows(row))
     }
 
-    const filteredRows = (row: any): boolean => {
+    const filteredRows = (row: Row): boolean => {
       const filterKey = searchQuery.value.toLowerCase()
-      if (row.cells.some((cell: any) =>
+      if (Array(row.cells).some((cell: cell) =>
         String(cell).toLowerCase().indexOf(filterKey) > -1) ||
       isHeader(row)) {
         return true
@@ -76,11 +76,11 @@ export default defineComponent({
       }
     }
 
-    const groupLevel = (row: any, colIndex: number): number => {
+    const groupLevel = (row: Row, colIndex: number): number => {
       return colIndex === 0
-        ? row.cells[0] === null
-          ? 11.5
-          : row.cellDetails?.[0].groupLevel ?? 0
+        ? (row.cells as unknown as Array<cell>)[0] === null
+            ? 11.5
+            : row.cellDetails?.[0].groupLevel ?? 0
         : 0
     }
     return {
