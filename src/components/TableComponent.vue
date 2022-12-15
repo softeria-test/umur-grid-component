@@ -76,8 +76,12 @@ export default defineComponent({
       }
     }
 
-    const groupLevel = (row: Row, colIndex: number): number => {
-      return colIndex === 0 ? row.cells[0] === null ? 11.5 : row.cellDetails?.[0].groupLevel ?? 0 : 0
+    const groupLevel = (row: any, colIndex: number): number => {
+      return colIndex === 0
+        ? row.cells[0] === null
+          ? 11.5
+          : row.cellDetails?.[0].groupLevel ?? 0
+        : 0
     }
     return {
       isHeader,
