@@ -1,7 +1,7 @@
 <template>
   <div>
     <form id="search">
-    Search <input name="query" v-model="searchQuery">
+    Search <input id="query" v-model="searchQuery">
     </form>
     <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
