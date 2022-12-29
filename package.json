@@ -62,7 +62,8 @@
       }
     },
     "collectCoverageFrom": [
-      "src/components/*.vue"
+      "src/components/*.vue",
+      "src/components/features/*.ts"
     ]
   },
   "packageManager": "yarn@3.2.4"

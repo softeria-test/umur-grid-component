@@ -27,6 +27,13 @@
 
 import { defineComponent, PropType, ref } from 'vue'
 import stach from '../stach-sdk/stach'
+import {
+  isHeader,
+  rowspan,
+  colspan,
+  alignment,
+  groupLevel
+} from './features/features'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
@@ -40,26 +47,6 @@ export default defineComponent({
 
   setup (props) {
     const searchQuery = ref('')
-
-    const isHeader = (row: Row): boolean => {
-      return row.rowType === 'Header' as unknown as RowType
-    }
-
-    const rowspan = (row: Row, colIndex: string): number => {
-      return row.headerCellDetails?.[colIndex].rowspan ?? 1
-    }
-
-    const colspan = (row: Row, colIndex: string): number => {
-      return row.headerCellDetails?.[colIndex].colspan ?? 1
-    }
-
-    const alignment = (row: Row, colIndex: string, type: string): string => {
-      if (type === 'vertical') {
-        return 'baseline'
-      } else {
-        return isHeader(row) ? 'center' as const : 'left' as const
-      }
-    }
 
     const filteredTable = (): IRow => {
       return props.table?.filter(row => filteredRows(row))
@@ -76,17 +63,10 @@ export default defineComponent({
       }
     }
 
-    const groupLevel = (row: Row, colIndex: number): number => {
-      if (colIndex === 0) {
-        return (row.cells as unknown as Array<cell>)[0] === null
-          ? 11.5
-          : row.cellDetails?.[0].groupLevel ?? 0
-      } else return 0
-    }
     return {
       isHeader,
-      colspan,
       rowspan,
+      colspan,
       groupLevel,
       alignment,
       filteredTable,

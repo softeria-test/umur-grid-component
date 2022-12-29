@@ -3,6 +3,13 @@ import TableComponent from '@/components/TableComponent.vue'
 import db from '../../db.json'
 import { ref } from 'vue'
 import stach from '@/stach-sdk/stach'
+import {
+  isHeader,
+  rowspan,
+  colspan,
+  alignment,
+  groupLevel
+} from '@/components/features/features'
 
 describe('TableComponent.vue', () => {
   type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined;
@@ -60,5 +67,56 @@ describe('TableComponent.vue', () => {
     const searchBar = wrapper.find('#query')
     await searchBar.setValue('europe')
     expect(wrapper.text()).not.toContain('America')
+  })
+})
+
+describe('singular function tests', () => {
+  type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined;
+  const table = ref<IRow>()
+
+  beforeEach(() => {
+    const pkg =
+      stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(db.data as unknown as stach.factset.protobuf.stach.v2.RowOrganizedPackage)
+    table.value = pkg.tables.main.data?.rows
+  })
+
+  it('returns true if given row is a header', () => {
+    expect(isHeader(table.value![0])).toBeTruthy()
+  })
+
+  it('returns false if given row is not a header', () => {
+    expect(isHeader(table.value![3])).toBeFalsy()
+  })
+
+  it('returns center for horizontal headers', () => {
+    expect(alignment(table.value![2], '0', 'horizontal')).toEqual('center')
+  })
+
+  it('returns left for horizontal non-header row', () => {
+    expect(alignment(table.value![4], '0', 'horizontal')).toEqual('left')
+  })
+
+  it('returns baseline for vertical alignment', () => {
+    expect(alignment(table.value![0], '0', 'vertical')).toEqual('baseline')
+  })
+
+  it('returns zero while colum index is not zero', () => {
+    expect(groupLevel(table.value![0], 1)).toEqual(0)
+  })
+
+  it('returns special value for null table data', () => {
+    expect(groupLevel(table.value![0], 0)).toEqual(11.5)
+  })
+
+  it('returns correct value for indented values', () => {
+    expect(groupLevel(table.value![7], 0)).toEqual(1)
+  })
+
+  it('returns correct value for indented values', () => {
+    expect(rowspan(table.value![0], '0')).toEqual(3)
+  })
+
+  it('returns correct value for indented values', () => {
+    expect(colspan(table.value![0], '3')).toEqual(4)
   })
 })
