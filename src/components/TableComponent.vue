@@ -1,10 +1,14 @@
 <template>
+  <div>
+    <form id="search">
+    Search <input id="query" v-model="searchQuery">
+    </form>
     <table class="stach-table centered">
       <caption><strong>My Tabular Data</strong></caption>
-      <tr v-for="(row, rowIndex) in table"
+      <tr v-for="(row, rowIndex) in filteredTable()"
       :key="rowIndex"
         v-bind:class="{ header : isHeader(row) }">
-        <td v-for="(value, colIndex) in filteredCells(row.cells)"
+        <td v-for="(value, colIndex) in row.cells"
         :key="colIndex"
           v-bind:rowspan="rowspan(row, colIndex)"
           v-bind:colspan="colspan(row, colIndex)"
@@ -16,49 +20,81 @@
         </td>
       </tr>
     </table>
+  </div>
 </template>
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { defineComponent, PropType, ref } from 'vue'
 import stach from '../stach-sdk/stach'
 
 type Row = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow
 type IRow = stach.factset.protobuf.stach.v2.RowOrganizedPackage.IRow[] | null | undefined
-type cells = stach.google.protobuf.IListValue | null | undefined
+type cell = stach.google.protobuf.IListValue | null | undefined
+type RowType = stach.factset.protobuf.stach.v2.RowOrganizedPackage.Row.RowType;
 
-@Component
-export default class TableComponent extends Vue {
-  @Prop() private table!: IRow;
+export default defineComponent({
+  props: {
+    table: Array as PropType<IRow>
+  },
 
-  isHeader (row: Row): boolean {
-    return row.rowType === 'Header' as unknown
-  }
+  setup (props) {
+    const searchQuery = ref('')
 
-  rowspan (row: Row, colIndex: string): number {
-    return row.headerCellDetails?.[colIndex].rowspan ?? 1
-  }
+    const isHeader = (row: Row): boolean => {
+      return row.rowType === 'Header' as unknown as RowType
+    }
 
-  colspan (row: Row, colIndex: string): number {
-    return row.headerCellDetails?.[colIndex].colspan ?? 1
-  }
+    const rowspan = (row: Row, colIndex: string): number => {
+      return row.headerCellDetails?.[colIndex].rowspan ?? 1
+    }
 
-  alignment (row: Row, colIndex: string, type: string): string {
-    if (type === 'vertical') {
-      return 'baseline'
-    } else {
-      return this.isHeader(row) ? 'center' as const : 'left' as const
+    const colspan = (row: Row, colIndex: string): number => {
+      return row.headerCellDetails?.[colIndex].colspan ?? 1
+    }
+
+    const alignment = (row: Row, colIndex: string, type: string): string => {
+      if (type === 'vertical') {
+        return 'baseline'
+      } else {
+        return isHeader(row) ? 'center' as const : 'left' as const
+      }
+    }
+
+    const filteredTable = (): IRow => {
+      return props.table?.filter(row => filteredRows(row))
+    }
+
+    const filteredRows = (row: Row): boolean => {
+      const filterKey = searchQuery.value.toLowerCase()
+      if (Array(row.cells).some((cell: cell) =>
+        String(cell).toLowerCase().indexOf(filterKey) > -1) ||
+      isHeader(row)) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    const groupLevel = (row: Row, colIndex: number): number => {
+      if (colIndex === 0) {
+        return (row.cells as unknown as Array<cell>)[0] === null
+          ? 11.5
+          : row.cellDetails?.[0].groupLevel ?? 0
+      } else return 0
+    }
+    return {
+      isHeader,
+      colspan,
+      rowspan,
+      groupLevel,
+      alignment,
+      filteredTable,
+      filteredRows,
+      searchQuery
     }
   }
-
-  filteredCells (cells: cells): cells {
-    return cells
-  }
-
-  groupLevel (row: Row, colIndex: number): number {
-    return colIndex === 0 ? row.cellDetails?.[0].groupLevel ?? 0 : 0
-  }
-}
+})
 </script>
 
 <style lang="scss">
@@ -74,5 +110,9 @@ export default class TableComponent extends Vue {
 }
 .header {
   font-weight: bold;
+}
+#search {
+  text-align: center;
+  margin-right: 22.5em;
 }
 </style>

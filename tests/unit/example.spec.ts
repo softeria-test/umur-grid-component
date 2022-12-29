@@ -14,7 +14,7 @@ describe('TableComponent.vue', () => {
       stach.factset.protobuf.stach.v2.RowOrganizedPackage.create(db.data as unknown as stach.factset.protobuf.stach.v2.RowOrganizedPackage)
     table.value = pkg.tables.main.data?.rows
 
-    wrapper = shallowMount(TableComponent, {
+    wrapper = shallowMount(TableComponent as any, {
       propsData: { table }
     })
   })
@@ -42,5 +42,23 @@ describe('TableComponent.vue', () => {
   })
   it('check td is td ', () => {
     expect(wrapper.findAll('td').at(2).exists()).toBe(true)
+  })
+  it('renders searchbar', () => {
+    expect(wrapper.text()).toContain('Search')
+  })
+  it('check td count when Cash is searched', async () => {
+    const searchBar = wrapper.find('#query')
+    await searchBar.setValue('Cash')
+    expect(wrapper.findAll('td').length).toEqual(21)
+  })
+  it('check td count when ca is searched', async () => {
+    const searchBar = wrapper.find('#query')
+    await searchBar.setValue('ca')
+    expect(wrapper.findAll('td').length).toEqual(53)
+  })
+  it('does not include America when europe is searched', async () => {
+    const searchBar = wrapper.find('#query')
+    await searchBar.setValue('europe')
+    expect(wrapper.text()).not.toContain('America')
   })
 })
